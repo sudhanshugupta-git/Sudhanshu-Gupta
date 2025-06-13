@@ -1,18 +1,18 @@
-
 import { TableBody, TableCell, TableRow, TablePagination } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import FilmDetailsPanel from "./FilmDetailsPanel";
 import { useFilmContext } from "../context/filmContext";
 
 export default function FilmTable() {
-  const {
-    films,
-    currentPage,
-    totalPages,
-    fetchFiles,
-    sortBy,
-    sortOrder,
-  } = useFilmContext();
+  const { films, currentPage, totalPages, fetchFiles, sortBy, sortOrder } =
+    useFilmContext();
 
+  const [selectedFilm, setSelectedFilm] = useState(null);
+  const [panelOpen, setPanelOpen] = useState(false);
+  const handleRowClick = (film) => {
+    setSelectedFilm(film);
+    setPanelOpen(true);
+  };
   const handleChangePage = (event, newPage) => {
     fetchFiles(newPage + 1, sortBy, sortOrder);
   };
@@ -25,6 +25,7 @@ export default function FilmTable() {
   return (
     <>
       <TableBody>
+
         {films.map((film, index) => (
           <TableRow
             key={film.film_id}
@@ -32,6 +33,7 @@ export default function FilmTable() {
               backgroundColor:
                 index % 2 === 0 ? "rgba(0 ,0, 0, 0.04)" : "white",
             }}
+            onClick={() => handleRowClick(film)}
           >
             <TableCell>{film.title}</TableCell>
             <TableCell>{film.release_year}</TableCell>
@@ -50,6 +52,12 @@ export default function FilmTable() {
         onPageChange={handleChangePage}
         rowsPerPage={10}
         rowsPerPageOptions={[]}
+      />
+
+      <FilmDetailsPanel
+        open={panelOpen}
+        onClose={() => setPanelOpen(false)}
+        film={selectedFilm}
       />
     </>
   );

@@ -81,7 +81,10 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'original_language_id',
       as: 'original_language'
     });
+
   };
+
+
 
   return Film;
 };
