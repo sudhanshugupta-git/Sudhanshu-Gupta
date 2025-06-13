@@ -9,22 +9,13 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING(128),
       allowNull: false
     },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: true
-    },
-    release_year: {
-      type: DataTypes.INTEGER, 
-      allowNull: true
-    },
+    description: DataTypes.TEXT,
+    release_year: DataTypes.INTEGER,
     language_id: {
       type: DataTypes.TINYINT.UNSIGNED,
       allowNull: false
     },
-    original_language_id: {
-      type: DataTypes.TINYINT.UNSIGNED,
-      allowNull: true
-    },
+    original_language_id: DataTypes.TINYINT.UNSIGNED,
     rental_duration: {
       type: DataTypes.TINYINT.UNSIGNED,
       allowNull: false,
@@ -35,10 +26,7 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 4.99
     },
-    length: {
-      type: DataTypes.SMALLINT.UNSIGNED,
-      allowNull: true
-    },
+    length: DataTypes.SMALLINT.UNSIGNED,
     replacement_cost: {
       type: DataTypes.DECIMAL(5, 2),
       allowNull: false,
@@ -50,7 +38,6 @@ export default (sequelize, DataTypes) => {
     },
     special_features: {
       type: DataTypes.STRING,
-      allowNull: true,
       get() {
         const raw = this.getDataValue('special_features');
         return raw ? raw.split(',') : [];
@@ -69,22 +56,11 @@ export default (sequelize, DataTypes) => {
     timestamps: false
   });
 
-
-  //associations 
   Film.associate = models => {
-    Film.belongsTo(models.Language, {
-      foreignKey: 'language_id',
-      as: 'language'
-    });
-
-    Film.belongsTo(models.Language, {
-      foreignKey: 'original_language_id',
-      as: 'original_language'
-    });
+    Film.belongsTo(models.Language, { foreignKey: 'language_id', as: 'language' });
+    Film.belongsTo(models.Language, { foreignKey: 'original_language_id', as: 'original_language' });
 
   };
-
-
 
   return Film;
 };

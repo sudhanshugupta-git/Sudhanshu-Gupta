@@ -1,31 +1,26 @@
-import { TableBody, TableCell, TableRow, TablePagination } from "@mui/material";
+import { TableBody, TableCell, TableRow } from "@mui/material";
 import { useEffect, useState } from "react";
 import FilmDetailsPanel from "./FilmDetailsPanel";
 import { useFilmContext } from "../context/filmContext";
 
-export default function FilmTable() {
-  const { films, currentPage, totalPages, fetchFiles, sortBy, sortOrder } =
-    useFilmContext();
+export default function FilmTable({ onRowClick }) {
+  const { films, currentPage, totalPages, fetchFiles, sortBy, sortOrder } = useFilmContext();
 
   const [selectedFilm, setSelectedFilm] = useState(null);
   const [panelOpen, setPanelOpen] = useState(false);
   const handleRowClick = (film) => {
     setSelectedFilm(film);
     setPanelOpen(true);
-  };
-  const handleChangePage = (event, newPage) => {
-    fetchFiles(newPage + 1, sortBy, sortOrder);
+    if (onRowClick) onRowClick(film);
   };
 
   useEffect(() => {
     fetchFiles(currentPage, sortBy, sortOrder);
-    // eslint-disable-next-line
   }, [sortBy, sortOrder]);
 
   return (
     <>
       <TableBody>
-
         {films.map((film, index) => (
           <TableRow
             key={film.film_id}
@@ -44,16 +39,6 @@ export default function FilmTable() {
           </TableRow>
         ))}
       </TableBody>
-
-      <TablePagination
-        component="div"
-        count={totalPages * 10}
-        page={currentPage - 1}
-        onPageChange={handleChangePage}
-        rowsPerPage={10}
-        rowsPerPageOptions={[]}
-      />
-
       <FilmDetailsPanel
         open={panelOpen}
         onClose={() => setPanelOpen(false)}
